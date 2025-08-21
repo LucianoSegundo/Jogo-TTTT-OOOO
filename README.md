@@ -1,5 +1,6 @@
 # Jogo-TTTT-OOOO
-## 1. Toot and Otto é um jogo similar a Lig 4. Ele é jogado em um tabuleiro com quatro linhas e seis colunas com espaços vazios no topo de cada coluna para inserir peças. O tabuleiro está vazio no começo do jogo.
+
+##  Toot and Otto é um jogo similar a Lig 4. Ele é jogado em um tabuleiro com quatro linhas e seis colunas com espaços vazios no topo de cada coluna para inserir peças. O tabuleiro está vazio no começo do jogo.
 
 Existem dois tipos de peças no Toot and Otto: o T e o O. Cada jogador tem seis Ts e seis Os para colocar no tabuleiro.
 
