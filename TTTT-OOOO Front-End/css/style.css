@@ -1,0 +1,131 @@
+body {
+    --base: rgb(124, 214, 241);
+    --baseHover: rgb(109, 186, 209);
+
+    --preto: rgb(51, 80, 88);
+    --fontBranca: rgb(227, 239, 243);
+    --fontescura: rgb(96, 105, 109);
+
+    --basebranca: rgb(207, 240, 252);
+
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+header {
+    background-color: var(--base);
+    height: 8vh;
+    width: 100%;
+}
+
+#corpo {
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#jogo {
+    /* display: flex; */
+    display: none;
+    width: 70%;
+    height: 80%;
+}
+
+#homepage {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--basebranca);
+
+    width: 70%;
+    height: 80%;
+    border-radius: 20px;
+}
+
+#homepage #cabe {
+    background-color: var(--base);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    height: 10%;
+    width: 100%;
+}
+
+#homepage #orpo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 4vw;
+
+    height: 90%;
+    width: 100%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    h2 {
+        color: var(--fontescura);
+    }
+
+    button {
+        height: 13%;
+        width: 25%;
+        background-color: var(--base);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        border-radius: 8px;
+        border: none;
+        color: var(--fontescura);
+        font-size: 1.2rem;
+
+
+    }
+
+    button:hover {
+        background-color: var(--baseHover);
+    }
+
+}
+
+footer {
+
+    background-color: var(--preto);
+    height: 20vh;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4vw;
+
+    flex-direction: row;
+
+    div {
+        width: 45%;
+
+    }
+
+    p {
+        width: 80%;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--fontBranca);
+
+        a {
+            color: rgb(149, 220, 243);
+        }
+
+        a:visited {
+            color: rgb(105, 181, 206);
+        }
+
+        a:hover {
+            color: rgb(111, 192, 219);
+        }
+
+        a:active {
+            color: rgb(76, 134, 153);
+        }
+    }
+}
