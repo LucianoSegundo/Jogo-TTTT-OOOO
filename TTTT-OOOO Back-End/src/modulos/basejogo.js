@@ -1,3 +1,6 @@
+const { v4: uuidv4 } = require('uuid');
+
+
 function iniciarJogo(partidasnova, ws, partidasCheias) {
     let clientId = uuidv4();
     ws.id = clientId;
@@ -63,7 +66,6 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
     if (partidasnova.TooT != null && partidasnova.TooT.id == ws.id) {
         partidasnova.TooT = null;
         partidasnova.oTTo = null;
-
     }
 
     else {
@@ -91,7 +93,6 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
                 mensagem.mensagem += "oTTo. pode procurar uma nova partida.";
                 partida.TooT.send(JSON.stringify(mensagem));
                 partida.TooT.close()
-
                 console.log(partidasCheias)
             }
         }
@@ -99,4 +100,7 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
     }
 }
 
-export { iniciarJogo, fimdeJogo };
+module.exports = {
+  iniciarJogo,
+  fimdeJogo
+};

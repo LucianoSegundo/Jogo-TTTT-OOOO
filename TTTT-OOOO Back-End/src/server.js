@@ -1,7 +1,5 @@
-import { iniciarJogo, fimdeJogo } from './modulos/basejogo.js';
-
 const WebSocket = require('ws');
-const { v4: uuidv4 } = require('uuid');
+const  basejogo = require('./modulos/basejogo.js');
 
 let partidasCheias = []
 let partidasnova = { TooT: null, oTTo: null }
@@ -15,7 +13,7 @@ const wss = new WebSocket.Server({
 
 wss.on('connection', (ws) => {
 
-    if (ws.id === null || ws.id === undefined) iniciarJogo(partidasnova, ws, partidasCheias);
+    if (ws.id === null || ws.id === undefined) basejogo.iniciarJogo(partidasnova, ws, partidasCheias);
 
     console.log(`[Servidor] Cliente ${ws.id} conectado `);
     console.log("tamanho partida cheia:" + partidasCheias.length)
@@ -27,7 +25,7 @@ wss.on('connection', (ws) => {
 
     ws.on('close', () => {
         
-         fimdeJogo(partidasnova, ws, partidasCheias)
+         basejogo.fimdeJogo(partidasnova, ws, partidasCheias)
 
         console.log('[Servidor] Cliente ' + ws.id + ' desconectado');
     });
