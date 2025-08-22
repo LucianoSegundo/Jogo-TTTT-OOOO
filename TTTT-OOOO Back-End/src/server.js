@@ -1,8 +1,9 @@
 const WebSocket = require('ws');
 const  basejogo = require('./modulos/basejogo.js');
+const { fazerJogada } = require('../../TTTT-OOOO Front-End/javascript/modulos/modulo_movimentacao.js');
 
 let partidasCheias = []
-let partidasnova = { TooT: null, oTTo: null }
+let partidasnova = { toot: null, otto: null }
 
 const wss = new WebSocket.Server({
     port: 8080,
@@ -18,9 +19,19 @@ wss.on('connection', (ws) => {
     console.log(`[Servidor] Cliente ${ws.id} conectado `);
     console.log("tamanho partida cheia:" + partidasCheias.length)
 
-    ws.on('message', (message) => {
-        console.log(`[Servidor] Mensagem recebida: ${message}`);
-        ws.send(`[Servidor] Mensagem enviada: ${message}`);
+    ws.on('message', (mensagem) => {
+        console.log(`[Servidor] Mensagem recebida: ${mensagem}`);
+
+        try {
+            let jj = JSON.parse(mensagem)
+            if("jogada"== jogada.tipo){
+            fazerJogada.jogada(jj.jogada,jj.jogador, jj.coluna, jj.tabuleiro,ws, partidasCheias);
+        }
+        } catch (error) {
+            
+        }
+        
+        ws.send(`[Servidor] Mensagem enviada: ${mensagem}`);
     });
 
     ws.on('close', () => {

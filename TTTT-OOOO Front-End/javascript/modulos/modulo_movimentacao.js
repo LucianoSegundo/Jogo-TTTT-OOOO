@@ -1,3 +1,4 @@
+import { getWebSocket } from "./modulo_webSocket.js";
 
 
 function ativarO() {
@@ -42,7 +43,7 @@ function ativaroT() {
 function desativarT() {
 
     sessionStorage.removeItem("selecionado")
-    document.getElementById("buT").style.background = "rgb(124, 214, 241)";
+    document.getElementById("buT").style.backgroundColor = "rgb(124, 214, 241)";
 
 }
 
@@ -55,7 +56,7 @@ function selecionarColuna(id) {
         if (slote.innerHTML === "") {
             let selecionado = sessionStorage.getItem("selecionado")
             if (selecionado != null) {
-                slote.style.background = "rgb(207, 240, 252)"
+                slote.style.backgroundColor = "rgb(207, 240, 252)"
                 slote.innerHTML = selecionado;
             }
         }
@@ -67,10 +68,44 @@ function soltarColuna(id) {
     let jogador = sessionStorage.getItem("jogador")
 
     if (jogador == vez) {
-        let slote = document.getElementById("c" + id + "l" + 1)
-        slote.style.backgroundColor = "rgb(109, 186, 209)"
-        slote.innerHTML = "";
+        let selecionado = sessionStorage.getItem("selecionado")
+        if (selecionado != null) {
+            let slote = document.getElementById("c" + id + "l" + 1)
+            slote.style.backgroundColor = "rgb(109, 186, 209)"
+            slote.innerHTML = "";
+        }
     }
 }
 
-export { desativarO, desativarT, ativarO, ativaroT, soltarColuna, selecionarColuna }
+
+function fazerJogada(coluna) {
+ let vez = sessionStorage.getItem("vez")
+    let jogador = sessionStorage.getItem("jogador")
+
+    if (jogador == vez) {
+    let socket = getWebSocket();
+
+    soltarColuna(coluna)
+
+    let selecionado = sessionStorage.getItem("selecionado");
+
+    desativarO()
+    desativarT()
+
+    let tabuleiro = JSON.parse(sessionStorage.getItem("tabuleiro"));
+        tabuleiro[coluna-1].linhas[0] = selecionado;
+    let jogador = sessionStorage.getItem("jogador");
+
+    let dados = {
+        tipo: "jogada",
+        tabuleiro: tabuleiro,
+        jogador: jogador,
+        jogada: selecionado,
+        colunaJogada: coluna
+    }
+
+    socket.send(JSON.stringify(dados));
+    }
+}
+
+export { desativarO, desativarT, ativarO, ativaroT, soltarColuna, selecionarColuna, fazerJogada }

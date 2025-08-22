@@ -1,5 +1,4 @@
-import { selecionarColuna, soltarColuna } from "./acessorios.js";
-
+import { selecionarColuna, soltarColuna, fazerJogada } from "./modulo_movimentacao.js";
 function renderizarJogo() {
     document.getElementById("mensagem").innerText = sessionStorage.getItem("mensagem");
 
@@ -41,10 +40,14 @@ function renderizarJogo() {
         div.addEventListener("mouseleave", function () {
             soltarColuna(CIndex+1)
         })
+         div.addEventListener("click", function () {
+            fazerJogada(CIndex+1)
+        })
         tabuleiro.appendChild(div);
        
     }
 
 }
+
 
 export { renderizarJogo }

@@ -1,4 +1,4 @@
-import { ativarO, ativaroT } from "./modulos/acessorios.js";
+import { ativarO, ativaroT } from "./modulos/modulo_movimentacao.js";
 import { começarPartida, terminarPartida } from "./modulos/modulo_inicioFim.js";
 let socket;
 document.getElementById("Binicio").addEventListener("click", function name(params) {
