@@ -10,7 +10,7 @@ function criarWebSocket(url) {
      let url ='ws://localhost:8080/jogar';
 
    } catch (error) {
-       let url ='ws:';
+       let url ='ws:https://jogo-tttt-oooo-back-end.onrender.com';
        console.log(url)
        socket = new WebSocket(url);
    }
