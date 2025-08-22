@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const { verificarResultado } = require('./validaçãoAvançada.js');
 
 
 function iniciarJogo(partidasnova, ws, partidasCheias) {
@@ -94,7 +95,7 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
     }
 }
 
-let posicao = null;
+
 function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, partidasCheias) {
     console.log("entrou no metodo jogada");
 
@@ -117,12 +118,10 @@ function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, par
         tabuleiro: tabuleiroNovo,
         coluna: coluna
     }
-        console.log("chegou validar jogda");
 
-    let copia = validarjogada(coluna, jogada, tabuleiroAntigo);
+    let resultadoValidacao = validarjogada(coluna, jogada, tabuleiroAntigo);
 
-    console.log("saiu validar jogda");
-    if (copia == false) {
+    if (resultadoValidacao.valido == false) {
         erro = {
             tipo: "erro",
             mensagem: "Jogada invalida, tente novamente"
@@ -130,32 +129,46 @@ function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, par
         ws.send(JSON.stringify(erro))
     }
     else {
+        console.log("mostrando tabela validada antes de verificar vitoria")
+        console.log(resultadoValidacao.tabuleiro)
 
+        let resultado = declararVitoria(coluna, resultadoValidacao.posicao,resultadoValidacao.tabuleiro);
 
-        let vitoria = declararVitoria(coluna, copia);
-        if (vitoria == false) {
-            console.log("entrou na decisao final");
+                console.log("mostrando resultdo do declaracao")
 
-            let sala = encontrarSala(ws, partidasCheias);
+        console.log(resultado)
 
-            if (sala.toot.id === ws.id) {
-                dados.mensagem = dados.mensagem + "otto";
-                sala.toot.send(JSON.stringify(dados))
-               
-                dados.numeroO = 0;
-                dados.numeroT = 0;
-                sala.otto.send(JSON.stringify(dados))
+        if (resultado.vitoria == false) {
+            if (resultado.empate == false) {
+
+                let sala = encontrarSala(ws, partidasCheias);
+
+                if (sala.toot.id === ws.id) {
+                    dados.mensagem = dados.mensagem + "otto";
+                    sala.toot.send(JSON.stringify(dados))
+
+                    dados.numeroO = 0;
+                    dados.numeroT = 0;
+                    sala.otto.send(JSON.stringify(dados))
+                }
+                else if (sala.otto.id === ws.id) {
+                    dados.mensagem = dados.mensagem + "toot"
+                    sala.otto.send(JSON.stringify(dados))
+
+                    dados.numeroO = 0;
+                    dados.numeroT = 0;
+                    sala.toot.send(JSON.stringify(dados))
+                }
+            } else if (resultado.empate == true) {
+                let aaaa = {
+                    tipo: "Empate",
+                    mensagem: "A partida resultou num empate, tente novamente na proxima partida"
+                }
+
+                sala.toot.send(JSON.stringify(aaaa))
+                sala.otto.send(JSON.stringify(aaaa))
             }
-            else if (sala.otto.id === ws.id) {
-                dados.mensagem = dados.mensagem + "toot"
-                sala.otto.send(JSON.stringify(dados))
-              
-                dados.numeroO = 0;
-                dados.numeroT = 0;
-                sala.toot.send(JSON.stringify(dados))
-            }
-
-        } if (vitoria == true) {
+        } else if (resultado.vitoria == true) {
             let sala = encontrarSala(ws, partidasCheias);
 
             let outrosDados = {
@@ -163,52 +176,74 @@ function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, par
                 mensagem: "Vitoria do jogador: ",
                 tabuleiro: tabuleiroNovo
             }
-            if (vitorioso === "toot") {
-                dados.mensagem = dados.mensagem + "toot"
-                sala.toot.send(JSON.stringify(dados))
-                sala.otto.send(JSON.stringify(dados))
+            if (resultado.vitorioso === "toot") {
+                                console.log("toot ganhro")
+
+                outrosDados.mensagem = outrosDados.mensagem + "toot"
+                sala.toot.send(JSON.stringify(outrosDados))
+                sala.otto.send(JSON.stringify(outrosDados))
             }
-            else if (vitorioso === "otto") {
-                dados.mensagem = dados.mensagem + "otto"
-                sala.otto.send(JSON.stringify(dados))
-                sala.toot.send(JSON.stringify(dados))
+            else if (resultado.vitorioso === "otto") {
+                console.log("otto ganhro")
+                outrosDados.mensagem = outrosDados.mensagem + "otto"
+                sala.otto.send(JSON.stringify(outrosDados))
+                sala.toot.send(JSON.stringify(outrosDados))
             }
 
         }
     }
 }
 
-
-
-function declararVitoria(coluna, tabuleiroNovo) {
+function declararVitoria(coluna, linha, tabuleiro) {
     console.log("entrou declarar vitorio");
+    console.log(tabuleiro);
 
-    return false;
+    declaracao = verificarResultado(tabuleiro, linha, coluna)
+
+    return declaracao;
 }
 
 function validarjogada(coluna, jogada, tabuleiro) {
     console.log("antes da validacap")
     console.log(tabuleiro)
     console.log()
-    if (tabuleiro[coluna-1].linhas[0] != null) return false;
-    else tabuleiro[coluna-1].linhas[0] = jogada;
 
-    for (let index = 1; index < tabuleiro[coluna-1].linhas.length; index++) {
-        const elemento = tabuleiro[coluna-1].linhas[index];
+    let posicao = null;
+    let resultado = {
+        valido: true,
+        posicao: null,
+        tabuleiro: null
+
+    }
+
+    if (tabuleiro[coluna - 1].linhas[0] != null) {
+        resultado.valido = false;
+        return resultado;
+    }
+    else tabuleiro[coluna - 1].linhas[0] = jogada;
+
+    for (let index = 1; index < tabuleiro[coluna - 1].linhas.length; index++) {
+        const elemento = tabuleiro[coluna - 1].linhas[index];
+
         if (elemento == null) {
-            tabuleiro[coluna-1].linhas[index - 1] = null
-            tabuleiro[coluna-1].linhas[index ] = jogada;
+            tabuleiro[coluna - 1].linhas[index - 1] = null
+            tabuleiro[coluna - 1].linhas[index] = jogada;
 
         }
         else if (elemento != null) {
             posicao = index - 1;
+            resultado.posicao = posicao;
             break;
         }
 
     }
     console.log("resultado da validação")
     console.log(tabuleiro)
-    return tabuleiro;
+
+    resultado.tabuleiro = tabuleiro
+    console.log("mostrando tabela validada")
+    console.log(resultado.tabuleiro)
+    return resultado;
 }
 
 function encontrarSala(ws, partidasCheias) {

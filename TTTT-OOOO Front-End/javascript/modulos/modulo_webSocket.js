@@ -1,4 +1,4 @@
-import { renderizarJogo, renderizarJogada} from "./modulo_jogo.js";
+import { renderizarJogo, renderizarJogada } from "./modulo_jogo.js";
 
 let socket = null;
 
@@ -42,7 +42,7 @@ function criarWebSocket(url) {
           location.reload();
 
         } else if (JSON.parse(event.data).tipo == "novajogada") {
-          
+
           sessionStorage.setItem("tabuleiro", JSON.stringify(data.tabuleiro));
           sessionStorage.setItem("mensagem", data.mensagem);
 
@@ -56,8 +56,15 @@ function criarWebSocket(url) {
           renderizarJogada(data.coluna)
         }
         else if (JSON.parse(event.data).tipo == "vitoria") {
-          alert(data.mensagem);
+          sessionStorage.setItem("tabuleiro", JSON.stringify(data.tabuleiro));
+
+          renderizarJogo()
+
+
+          alert(data.mensagem)
           location.reload();
+
+
 
         } else if (JSON.parse(event.data).tipo == "erro") {
           alert(data.mensagem);
