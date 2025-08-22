@@ -11,14 +11,26 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    width: 100vw;
     overflow-x: hidden;
+
+    width: 100vw;
 }
 
 header {
     background-color: var(--base);
     height: 8vh;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    color: white;
+    padding-right: 1vw;
+    padding-left: 1vw;
+
+    h1 {
+        min-width: 15vw;
+    }
 }
 
 #corpo {
@@ -30,10 +42,86 @@ header {
 }
 
 #jogo {
-    /* display: flex; */
     display: none;
+    flex-direction: column;
+    background-color: var(--basebranca);
+
     width: 70%;
     height: 80%;
+    border-radius: 20px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+}
+
+#jogo #pecas {
+
+    display: flex;
+    background-color: var(--base);
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    width: 100%;
+    height: 15%;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+#jogo #pecas button {
+    height: 100%;
+    width: 50%;
+    border: none;
+    background-color: var(--base);
+}
+
+#jogo #pecas button:first-child {
+    border-bottom-left-radius: 20px;
+}
+#jogo #pecas button:last-child {
+    border-bottom-right-radius: 20px;
+}
+#jogo #pecas button:hover {
+    background-color: var(--baseHover);
+
+}
+
+#jogo #tabuleiro {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--basebranca);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    width: 100%;
+    height: 85%;
+}
+
+#jogo #tabuleiro .coluna {
+    width: 14%;
+    height: 100%;
+    background-color: var(--base);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border: solid var(--base) 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+#jogo #tabuleiro .coluna:hover {
+    border: solid rgb(66, 66, 66) 2px;
+
+}
+
+#jogo #tabuleiro .coluna .slote {
+
+
+    border-radius: 100px;
+    background-color: var(--baseHover);
+    width: 80%;
+    height: 22%;
+
 }
 
 #homepage {

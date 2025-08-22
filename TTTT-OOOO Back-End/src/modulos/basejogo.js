@@ -10,6 +10,7 @@ function iniciarJogo(partidasnova, ws, partidasCheias) {
         partidasnova.TooT = ws
 
         let mensagem = {
+            tipo: "Aguardando",
             mensagem: 'Você é o jogador TooT, Aguardando a chegada do OTTO',
             jogador: "TooT"
         }
@@ -25,28 +26,21 @@ function iniciarJogo(partidasnova, ws, partidasCheias) {
         console.log("nome tamanho da lista " + partidasCheias.push(partida));
         console.log(partidasCheias)
         let mensagem = {
+            tipo: "iniciojogo",
             mensagem: 'Pronto para comeaçar. è a vez TooT jogar.',
             jogador: "TooT",
-            tabuleiro: {
-                coluna1: {
-                    l1: null, l2: null, l3: null, l4: null
-                },
-                coluna2: {
-                    l1: null, l2: null, l3: null, l4: null
-                },
-                coluna3: {
-                    l1: null, l2: null, l3: null, l4: null
-                },
-                coluna4: {
-                    l1: null, l2: null, l3: null, l4: null
-                },
-                coluna5: {
-                    l1: null, l2: null, l3: null, l4: null
-                },
-                coluna6: {
-                    l1: null, l2: null, l3: null, l4: null
-                },
-            }
+            numeroT: 6,
+            numeroO: 6,
+            vez: "TooT",
+            tabuleiro: [
+                { "coluna": 1, "linhas": [null, null, null, null] },
+                { "coluna": 2, "linhas": [null, null, null, null] },
+                { "coluna": 3, "linhas": [null, null, null, null] },
+                { "coluna": 4, "linhas": [null, null, null, null] },
+                { "coluna": 5, "linhas": [null, null, null, null] },
+                { "coluna": 6, "linhas": [null, null, null, null] }
+            ]
+
         }
 
         partidasnova.TooT.send(JSON.stringify(mensagem))
@@ -71,7 +65,7 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
     else {
         let mensagem = {
             mensagem: "você venceu devido a desistencia de ",
-            status: "desconexao"
+            tipo: "desconexao"
         }
 
         for (let index = 0; index < partidasCheias.length; index++) {
@@ -101,6 +95,6 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
 }
 
 module.exports = {
-  iniciarJogo,
-  fimdeJogo
+    iniciarJogo,
+    fimdeJogo
 };
