@@ -60,14 +60,18 @@ function criarWebSocket(url) {
 
           renderizarJogo()
 
-
           alert(data.mensagem)
           location.reload();
 
-
-
         } else if (JSON.parse(event.data).tipo == "erro") {
           alert(data.mensagem);
+          location.reload();
+
+        } else if (JSON.parse(event.data).tipo == "empate") {
+          alert(data.mensagem)
+          location.reload();
+          location.reload();
+
 
         }
 

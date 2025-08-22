@@ -97,7 +97,6 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
 
 
 function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, partidasCheias) {
-    console.log("entrou no metodo jogada");
 
     let vez;
     let numeroT = 0;
@@ -129,14 +128,9 @@ function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, par
         ws.send(JSON.stringify(erro))
     }
     else {
-        console.log("mostrando tabela validada antes de verificar vitoria")
-        console.log(resultadoValidacao.tabuleiro)
 
-        let resultado = declararVitoria(coluna, resultadoValidacao.posicao,resultadoValidacao.tabuleiro);
-
-                console.log("mostrando resultdo do declaracao")
-
-        console.log(resultado)
+        console.log(resultadoValidacao)
+        let resultado = declararVitoria(coluna, resultadoValidacao.posicao, resultadoValidacao.tabuleiro);
 
         if (resultado.vitoria == false) {
             if (resultado.empate == false) {
@@ -160,8 +154,10 @@ function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, par
                     sala.toot.send(JSON.stringify(dados))
                 }
             } else if (resultado.empate == true) {
+                let sala = encontrarSala(ws, partidasCheias);
+
                 let aaaa = {
-                    tipo: "Empate",
+                    tipo: "empate",
                     mensagem: "A partida resultou num empate, tente novamente na proxima partida"
                 }
 
@@ -177,7 +173,7 @@ function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, par
                 tabuleiro: tabuleiroNovo
             }
             if (resultado.vitorioso === "toot") {
-                                console.log("toot ganhro")
+                console.log("toot ganhro")
 
                 outrosDados.mensagem = outrosDados.mensagem + "toot"
                 sala.toot.send(JSON.stringify(outrosDados))
@@ -204,9 +200,6 @@ function declararVitoria(coluna, linha, tabuleiro) {
 }
 
 function validarjogada(coluna, jogada, tabuleiro) {
-    console.log("antes da validacap")
-    console.log(tabuleiro)
-    console.log()
 
     let posicao = null;
     let resultado = {
@@ -228,6 +221,7 @@ function validarjogada(coluna, jogada, tabuleiro) {
         if (elemento == null) {
             tabuleiro[coluna - 1].linhas[index - 1] = null
             tabuleiro[coluna - 1].linhas[index] = jogada;
+            resultado.posicao = index;
 
         }
         else if (elemento != null) {
@@ -237,12 +231,9 @@ function validarjogada(coluna, jogada, tabuleiro) {
         }
 
     }
-    console.log("resultado da validação")
-    console.log(tabuleiro)
 
     resultado.tabuleiro = tabuleiro
-    console.log("mostrando tabela validada")
-    console.log(resultado.tabuleiro)
+
     return resultado;
 }
 
