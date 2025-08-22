@@ -2,7 +2,7 @@ import { criarWebSocket } from "./modulo_webSocket.js";
 let socket = "aaa";
 function começarPartida(params) {
 
-    socket = criarWebSocket('ws://localhost:8080/jogar');
+    socket = criarWebSocket('ws://jogo-tttt-oooo-back-end.onrender.com');
 
     console.log("Teste bem sucedido")
 
