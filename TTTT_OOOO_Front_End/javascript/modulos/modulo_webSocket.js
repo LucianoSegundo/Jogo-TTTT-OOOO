@@ -4,7 +4,16 @@ let socket = null;
 
 function criarWebSocket(url) {
   if (!socket || socket.readyState === WebSocket.CLOSED) {
-    socket = new WebSocket(url);
+
+   try {
+     socket = new WebSocket(url);
+     let url ='ws://localhost:8080/jogar';
+
+   } catch (error) {
+       let url ='ws:';
+       console.log(url)
+       socket = new WebSocket(url);
+   }
 
     socket.addEventListener('open', () => {
       console.log('[WebSocket] Conectado');
