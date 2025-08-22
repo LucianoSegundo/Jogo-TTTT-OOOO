@@ -1,3 +1,5 @@
+import { selecionarColuna, soltarColuna } from "./acessorios.js";
+
 function renderizarJogo() {
     document.getElementById("mensagem").innerText = sessionStorage.getItem("mensagem");
 
@@ -6,30 +8,41 @@ function renderizarJogo() {
     let tabuleiro = document.getElementById("tabuleiro");
     tabuleiro.innerHTML = "";
 
-    for (let index = 0; index < tabela.length; index++) {
-        const coluna = tabela[index];
+    for (let CIndex = 0; CIndex < tabela.length; CIndex++) {
+        const coluna = tabela[CIndex];
         let div = document.createElement("div");
 
         div.classList.add("coluna")
         div.id = coluna.coluna
         console.log("coluna " + coluna.coluna)
 
-        for (let index = 0; index < coluna.linhas.length; index++) {
+        for (let lIndex = 0; lIndex < coluna.linhas.length; lIndex++) {
 
-            const linha = coluna.linhas[index];
+            const linha = coluna.linhas[lIndex];
             let slote = document.createElement("div");
-            
+
             slote.classList.add("slote")
             console.log("linha " + linha)
-
-            if (linha == null) { }
+                let c = CIndex+1
+                let l = lIndex+1
+            if (linha == null) {
+                slote.id = "c" + c + "l" + l
+            }
             else {
                 slote.innerText = linha;
+                slote.id = "c" + c + "l" + l
             }
+
             div.appendChild(slote);
         }
-
+         div.addEventListener("mouseenter", function () {
+            selecionarColuna(CIndex+1)
+        })
+        div.addEventListener("mouseleave", function () {
+            soltarColuna(CIndex+1)
+        })
         tabuleiro.appendChild(div);
+       
     }
 
 }
