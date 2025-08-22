@@ -1,3 +1,4 @@
+import { renderizarJogo } from "./modulo_jogo.js";
 import { getWebSocket } from "./modulo_webSocket.js";
 
 
@@ -10,10 +11,11 @@ function ativarO() {
     else {
         if ("O" == sessionStorage.getItem("selecionado")) desativarO();
         else {
+            if (Number(sessionStorage.getItem("numeroO"))> 0){
             sessionStorage.setItem("selecionado", "O")
             document.getElementById("buO").style.backgroundColor = "rgb(109, 186, 209)";
             document.getElementById("buT").style.backgroundColor = "rgb(124, 214, 241)";
-
+        }else alert("jogada Invalida, suas Peças O Acabaram, Tente Novamente Com Outra Peça")
         }
 
     }
@@ -32,11 +34,15 @@ function ativaroT() {
         alert("Espere a sua Vez!!!!")
     }
     else {
+        
         if ("T" == sessionStorage.getItem("selecionado")) desativarT();
         else {
+            if (Number(sessionStorage.getItem("numeroT"))> 0){
+
             sessionStorage.setItem("selecionado", "T")
             document.getElementById("buT").style.backgroundColor = "rgb(109, 186, 209)";
             document.getElementById("buO").style.backgroundColor = "rgb(124, 214, 241)";
+        }else alert("jogada Invalida, suas Peças T Acabaram, Tente Novamente Com Outra Peça")
         }
     }
 }
@@ -48,13 +54,17 @@ function desativarT() {
 }
 
 function selecionarColuna(id) {
+    
     let vez = sessionStorage.getItem("vez")
     let jogador = sessionStorage.getItem("jogador")
 
     if (jogador == vez) {
         let slote = document.getElementById("c" + id + "l" + 1)
+
         if (slote.innerHTML === "") {
+
             let selecionado = sessionStorage.getItem("selecionado")
+
             if (selecionado != null) {
                 slote.style.backgroundColor = "rgb(207, 240, 252)"
                 slote.innerHTML = selecionado;
@@ -64,47 +74,42 @@ function selecionarColuna(id) {
 }
 
 function soltarColuna(id) {
-    let vez = sessionStorage.getItem("vez")
-    let jogador = sessionStorage.getItem("jogador")
-
-    if (jogador == vez) {
-        let selecionado = sessionStorage.getItem("selecionado")
-        if (selecionado != null) {
-            let slote = document.getElementById("c" + id + "l" + 1)
-            slote.style.backgroundColor = "rgb(109, 186, 209)"
-            slote.innerHTML = "";
-        }
-    }
+    renderizarJogo()
 }
 
 
 function fazerJogada(coluna) {
- let vez = sessionStorage.getItem("vez")
+    let vez = sessionStorage.getItem("vez")
     let jogador = sessionStorage.getItem("jogador")
 
     if (jogador == vez) {
-    let socket = getWebSocket();
+        let socket = getWebSocket();
 
-    soltarColuna(coluna)
+        soltarColuna(coluna)
 
-    let selecionado = sessionStorage.getItem("selecionado");
+        let selecionado = sessionStorage.getItem("selecionado");
 
-    desativarO()
-    desativarT()
+        desativarO()
+        desativarT()
 
-    let tabuleiro = JSON.parse(sessionStorage.getItem("tabuleiro"));
-        tabuleiro[coluna-1].linhas[0] = selecionado;
-    let jogador = sessionStorage.getItem("jogador");
+        let tabuleiro = JSON.parse(sessionStorage.getItem("tabuleiro"));
+        let tabuleiroNovo = JSON.parse(sessionStorage.getItem("tabuleiro"));
 
-    let dados = {
-        tipo: "jogada",
-        tabuleiro: tabuleiro,
-        jogador: jogador,
-        jogada: selecionado,
-        colunaJogada: coluna
-    }
 
-    socket.send(JSON.stringify(dados));
+        tabuleiroNovo[coluna - 1].linhas[0] = selecionado;
+        let jogador = sessionStorage.getItem("jogador");
+
+        let dados = {
+            tipo: "jogada",
+            jogador: jogador,
+            jogada: selecionado,
+            colunaJogada: coluna,
+            tabuleiroNovo: tabuleiroNovo,
+            tabuleiroAntigo: tabuleiro,
+
+        }
+
+        socket.send(JSON.stringify(dados));
     }
 }
 

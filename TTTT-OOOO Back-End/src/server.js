@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const  basejogo = require('./modulos/basejogo.js');
-const { fazerJogada } = require('../../TTTT-OOOO Front-End/javascript/modulos/modulo_movimentacao.js');
+
 
 let partidasCheias = []
 let partidasnova = { toot: null, otto: null }
@@ -24,14 +24,14 @@ wss.on('connection', (ws) => {
 
         try {
             let jj = JSON.parse(mensagem)
-            if("jogada"== jogada.tipo){
-            fazerJogada.jogada(jj.jogada,jj.jogador, jj.coluna, jj.tabuleiro,ws, partidasCheias);
+            if("jogada"== jj.tipo){
+            basejogo.jogada(jj.jogada,jj.jogador, jj.colunaJogada, jj.tabuleiroNovo,
+                jj.tabuleiroAntigo,ws, partidasCheias);
         }
         } catch (error) {
-            
+            console.log(error)
         }
         
-        ws.send(`[Servidor] Mensagem enviada: ${mensagem}`);
     });
 
     ws.on('close', () => {

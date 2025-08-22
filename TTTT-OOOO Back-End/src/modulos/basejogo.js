@@ -94,85 +94,126 @@ function fimdeJogo(partidasnova, ws, partidasCheias) {
     }
 }
 
-function jogada(jogada, jogador, coluna, tabuleiro, ws, partidasCheias) {
+let posicao = null;
+function jogada(jogada, jogador, coluna, tabuleiroNovo, tabuleiroAntigo, ws, partidasCheias) {
+    console.log("entrou no metodo jogada");
 
-    let copia;
     let vez;
-    let numetoT = 0;
+    let numeroT = 0;
     let numeroO = 0;
 
     if (jogada == "T") numeroT = -1;
-    else if (jogada == "O") numeroT = -1;
+    else if (jogada == "O") numeroO = -1;
 
-    if (jogador == "toot") vez = otto;
-    else if (jogador == "otto") vez = toot;
+    if (jogador == "toot") vez = "otto";
+    else if (jogador == "otto") vez = "toot";
 
     let dados = {
         tipo: "novajogada",
         mensagem: "Agora é a vez do ",
         vez: vez,
-        numetoT: numeroT,
+        numeroT: numeroT,
         numeroO: numeroO,
-        tabuleiro: tabuleiro
+        tabuleiro: tabuleiroNovo,
+        coluna: coluna
     }
+        console.log("chegou validar jogda");
 
-    if (declararVitoria == false) {
-        let sala = encontrarSala(ws, partidasCheias);
+    let copia = validarjogada(coluna, jogada, tabuleiroAntigo);
 
-        if (sala.toot.id === ws.id) {
-            dados.mensagem = dados.mensagem + "otto";
-            sala.toot.send(JSON.stringify(dados))
-            numetoT = 0;
-            numeroO = 0;
-            dados.numeroO = numeroO;
-            dados.numetoT = numetoT;
-            sala.otto.send(JSON.stringify(dados))
+    console.log("saiu validar jogda");
+    if (copia == false) {
+        erro = {
+            tipo: "erro",
+            mensagem: "Jogada invalida, tente novamente"
         }
-        else if (sala.otto.id === ws.id) {
-            dados.mensagem = dados.mensagem + "toot"
-            sala.otto.send(JSON.stringify(dados))
-            numetoT = 0;
-            numeroO = 0;
-            dados.numeroO = numeroO;
-            dados.numetoT = numetoT;
-            sala.toot.send(JSON.stringify(dados))
-        }
-
-    } if (declararVitoria == true) {
-        let sala = encontrarSala(ws, partidasCheias);
-
-        let outrosDados = {
-            tipo: "vitoria",
-            mensagem: "Vitoria do jogador: ",
-            tabuleiro: tabuleiro
-        }
-        if (vitorioso === "toot") {
-            dados.mensagem = dados.mensagem + "toot"
-            sala.toot.send(JSON.stringify(dados))
-            sala.otto.send(JSON.stringify(dados))
-        }
-        else if (vitorioso === "otto") {
-            dados.mensagem = dados.mensagem + "otto"
-            sala.otto.send(JSON.stringify(dados))
-            sala.toot.send(JSON.stringify(dados))
-        }
-
+        ws.send(JSON.stringify(erro))
     }
+    else {
 
+
+        let vitoria = declararVitoria(coluna, copia);
+        if (vitoria == false) {
+            console.log("entrou na decisao final");
+
+            let sala = encontrarSala(ws, partidasCheias);
+
+            if (sala.toot.id === ws.id) {
+                dados.mensagem = dados.mensagem + "otto";
+                sala.toot.send(JSON.stringify(dados))
+               
+                dados.numeroO = 0;
+                dados.numeroT = 0;
+                sala.otto.send(JSON.stringify(dados))
+            }
+            else if (sala.otto.id === ws.id) {
+                dados.mensagem = dados.mensagem + "toot"
+                sala.otto.send(JSON.stringify(dados))
+              
+                dados.numeroO = 0;
+                dados.numeroT = 0;
+                sala.toot.send(JSON.stringify(dados))
+            }
+
+        } if (vitoria == true) {
+            let sala = encontrarSala(ws, partidasCheias);
+
+            let outrosDados = {
+                tipo: "vitoria",
+                mensagem: "Vitoria do jogador: ",
+                tabuleiro: tabuleiroNovo
+            }
+            if (vitorioso === "toot") {
+                dados.mensagem = dados.mensagem + "toot"
+                sala.toot.send(JSON.stringify(dados))
+                sala.otto.send(JSON.stringify(dados))
+            }
+            else if (vitorioso === "otto") {
+                dados.mensagem = dados.mensagem + "otto"
+                sala.otto.send(JSON.stringify(dados))
+                sala.toot.send(JSON.stringify(dados))
+            }
+
+        }
+    }
 }
 
 
 
-function declararVitoria(coluna, tabuleiro) {
+function declararVitoria(coluna, tabuleiroNovo) {
+    console.log("entrou declarar vitorio");
+
     return false;
 }
 
-function validarjogada(coluna, tabuleiro){
+function validarjogada(coluna, jogada, tabuleiro) {
+    console.log("antes da validacap")
+    console.log(tabuleiro)
+    console.log()
+    if (tabuleiro[coluna-1].linhas[0] != null) return false;
+    else tabuleiro[coluna-1].linhas[0] = jogada;
 
-    return false;
+    for (let index = 1; index < tabuleiro[coluna-1].linhas.length; index++) {
+        const elemento = tabuleiro[coluna-1].linhas[index];
+        if (elemento == null) {
+            tabuleiro[coluna-1].linhas[index - 1] = null
+            tabuleiro[coluna-1].linhas[index ] = jogada;
+
+        }
+        else if (elemento != null) {
+            posicao = index - 1;
+            break;
+        }
+
+    }
+    console.log("resultado da validação")
+    console.log(tabuleiro)
+    return tabuleiro;
 }
 
 function encontrarSala(ws, partidasCheias) {
+    console.log("fentrou descoberta de partida");
+
     for (let index = 0; index < partidasCheias.length; index++) {
         const element = partidasCheias[index];
 
